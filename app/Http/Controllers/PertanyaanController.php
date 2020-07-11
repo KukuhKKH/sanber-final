@@ -65,15 +65,7 @@ class PertanyaanController extends Controller
         foreach ($pertanyaan->tag as $value) {
             $tag_id[] = $value->id;
         }
-        $like = DB::table('pertanyaan')
-            ->select('pertanyaan.id', 'pertanyaan.judul', 'users.nama', DB::raw('GROUP_CONCAT(tag.nama) AS tag'))
-            ->join('users', 'users.id', '=', 'pertanyaan.user_id', 'left')
-            ->join('pertanyaan_tag', 'pertanyaan.id', '=', 'pertanyaan_tag.pertanyaan_id', 'left')
-            ->join('tag', 'tag.id', '=', 'pertanyaan_tag.tag_id', 'left')
-            ->groupBy('pertanyaan.id')
-            ->whereIn('tag.id', $tag_id)
-            ->limit(7)
-            ->get();
+        $like = $this->like($tag_id, $pertanyaan->id, 5);
         views($pertanyaan)->record();
         return view('pages.pertanyaan.show', compact('pertanyaan', 'like'));
     }
@@ -127,5 +119,18 @@ class PertanyaanController extends Controller
         } catch(\Exception $e) {
             return redirect()->back()->with(['error' => true, 'message' => $e->getMessage()]);
         }
+    }
+
+    private function like($where, $id_pertanyaan = 0, $limit = 10) {
+        return DB::table('pertanyaan')
+            ->select('pertanyaan.id', 'pertanyaan.judul', 'users.nama', DB::raw('GROUP_CONCAT(tag.nama) AS tag'))
+            ->join('users', 'users.id', '=', 'pertanyaan.user_id', 'left')
+            ->join('pertanyaan_tag', 'pertanyaan.id', '=', 'pertanyaan_tag.pertanyaan_id', 'left')
+            ->join('tag', 'tag.id', '=', 'pertanyaan_tag.tag_id', 'left')
+            ->groupBy('pertanyaan.id')
+            ->where('pertanyaan.id', '!=',$id_pertanyaan)
+            ->whereIn('tag.id', $where)
+            ->limit($limit)
+            ->get();
     }
 }
