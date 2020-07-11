@@ -37,7 +37,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['point'];
+
     public function pertanyaan() {
         return $this->hasMany('App\Pertanyaan');
+    }
+
+    public function vote() {
+        return $this->belongsToMany('App\Vote', 'vote_has_user');
+    }
+
+//    public function points() {
+//        return $this->vote()->sum('point');
+//    }
+
+    public function getPointAttribute() {
+        $up = $this->vote()->where(['status' => 1])->sum('point');
+        $down = $this->vote()->where(['status' => 0])->sum('point');
+        return $up - $down;
     }
 }

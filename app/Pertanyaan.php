@@ -12,6 +12,7 @@ class Pertanyaan extends Model implements Viewable
 
     protected $table = "pertanyaan";
     protected $fillable = ['judul', 'isi', 'user_id'];
+    protected $appends = ['point'];
 
     public static function boot() {
         parent::boot();
@@ -34,5 +35,15 @@ class Pertanyaan extends Model implements Viewable
 
     public function komentar() {
         return $this->belongsToMany('App\Komentar', 'pertanyaan_has_komentar');
+    }
+
+    public function vote() {
+        return $this->belongsToMany('App\Vote', 'pertanyaan_has_vote');
+    }
+
+    public function getPointAttribute() {
+        $up = $this->vote()->where(['status' => 1])->count('point');
+        $down = $this->vote()->where(['status' => 0])->count('point');
+        return $up - $down;
     }
 }

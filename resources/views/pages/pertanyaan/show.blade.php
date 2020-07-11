@@ -16,9 +16,9 @@
             <div class="col-md-8 text-justify border-right pr-3">
                 <div class="row">
                     <div class="col-md-1 text-center">
-                        <a href="{{ route('vote.up', [$pertanyaan->id, 'pertanyaan']) }}" {!! ($pertanyaan->user_id == Auth::user()->id) ? 'class="disabled text-dark"' : '' !!}><i class="fas fa-sort-up fa-3x"></i></a>
-                        <span>0</span>
-                        <a href="{{ route('vote.down', [$pertanyaan->id, 'pertanyaan']) }}" {!! ($pertanyaan->user_id == Auth::user()->id) ? 'class="disabled text-dark"' : '' !!}><i class="fas fa-sort-down fa-3x"></i></a>
+                        <a href="{{ route('vote.up', [$pertanyaan->id, 'pertanyaan', $pertanyaan->user_id]) }}" {!! ($pertanyaan->user_id == Auth::user()->id) ? 'class="disabled text-dark"' : '' !!}><i class="fas fa-sort-up fa-3x"></i></a>
+                        <span>{{ $pertanyaan->point }}</span>
+                        <a href="{{ route('vote.down', [$pertanyaan->id, 'pertanyaan', $pertanyaan->user_id]) }}" {!! ($pertanyaan->user_id == Auth::user()->id) ? 'class="disabled text-dark"' : '' !!}><i class="fas fa-sort-down fa-3x"></i></a>
                     </div>
                     <div class="col-md-11 mb-5">
                         <div class="border-bottom pb-3 mb-5">
@@ -45,9 +45,9 @@
                         @foreach($pertanyaan->jawaban as $value)
                             <div class="row mt-5 pr-3">
                                 <div class="col-md-1 text-center">
-                                    <a href="{{ route('vote.down', [$value->id, 'jawaban']) }}" {!! ($value->user_id == Auth::user()->id) ? 'class="disabled text-dark"' : '' !!}><i class="fas fa-sort-up fa-3x"></i></a>
-                                    <span>0</span>
-                                    <a href="{{ route('vote.down', [$value->id, 'jawaban']) }}" {!! ($value->user_id == Auth::user()->id) ? 'class="disabled text-dark"' : '' !!}><i class="fas fa-sort-down fa-3x"></i></a>
+                                    <a href="{{ route('vote.up', [$value->id, 'jawaban', $value->user_id]) }}" {!! ($value->user_id == Auth::user()->id) ? 'class="disabled text-dark"' : '' !!}><i class="fas fa-sort-up fa-3x"></i></a>
+                                    <span>{{ $value->point }}</span>
+                                    <a href="{{ route('vote.down', [$value->id, 'jawaban', $value->user_id]) }}" {!! ($value->user_id == Auth::user()->id) ? 'class="disabled text-dark"' : '' !!}><i class="fas fa-sort-down fa-3x"></i></a>
                                 </div>
                                 <div class="col-md-11">
                                     <div class="border-bottom pb-3 mb-3">
@@ -64,7 +64,7 @@
                                         <img class="mr-2 rounded-circle" width="25" src="{{ ($value->user->foto != '') ? $value->user->foto : asset('images/user.png') }}" alt="{{ $value->user->nama }}">
                                         <div class="media-body">
                                             <small class="mt-0">{{ $value->user->nama }}</small><br>
-                                            <small title="point reputations">100</small> . <small>{{ $value->created_at->diffForHumans() }}</small>
+                                            <small title="point reputations">{{ $value->user->point }}</small> . <small>{{ $value->created_at->diffForHumans() }}</small>
                                         </div>
                                     </div>
 

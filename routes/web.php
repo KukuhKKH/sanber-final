@@ -27,6 +27,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('pertanyaan/{id}/jawab', 'PertanyaanController@jawab')->name('pertanyaan.jawab');
     Route::post('komentar/{id}/{jenis}', 'PertanyaanController@komentar');
     Route::get('benar/{id}', 'JawabanController@benar')->name('jawaban.benar');
-    Route::get('voteup/{id}/{jenis}', 'VoteController@vote_up')->name('vote.up');
-    Route::get('votedown/{id}/{jenis}', 'VoteController@vote_down')->name('vote.down');
+    Route::get('voteup/{id}/{jenis}/{id_penerima}', 'VoteController@vote_up')->name('vote.up');
+    Route::get('votedown/{id}/{jenis}/{id_penerima}', 'VoteController@vote_down')->name('vote.down');
 });
