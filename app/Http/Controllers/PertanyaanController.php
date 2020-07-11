@@ -176,7 +176,7 @@ class PertanyaanController extends Controller
             ->join('views', 'pertanyaan.id', '=', 'views.viewable_id', 'left')
             ->join('users', 'pertanyaan.user_id', '=', 'users.id', 'left')
             ->select(DB::raw('count(viewable_id) as count'), 'pertanyaan.id', 'pertanyaan.judul', 'users.nama')
-            ->groupBy('id', 'judul', 'nama')
+            ->groupBy('pertanyaan.id', 'judul', 'nama')
             ->orderBy('count', 'desc')
             ->take(5)
             ->get();
