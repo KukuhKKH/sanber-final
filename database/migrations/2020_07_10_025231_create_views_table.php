@@ -43,7 +43,7 @@ class CreateViewsTable extends Migration
     {
         $this->schema->create($this->table, function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->morphs('viewable');
+            $table->morphs('viewable')->nullable();
             $table->text('visitor')->nullable();
             $table->string('collection')->nullable();
             $table->timestamp('viewed_at')->useCurrent();
