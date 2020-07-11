@@ -19,11 +19,11 @@ Auth::routes();
 Route::get('/pertanyaan/detail', 'Frontend\PertanyaanController@detail')->name('pertanyaan.detail');
 
 Route::get('pertanyaan', 'PertanyaanController@index')->name('pertanyaan.index');
-Route::get('pertanyaan/{id}', 'PertanyaanController@show')->name('pertanyaan.show');
+//Route::get('pertanyaan/{id:[0-9]+}', 'PertanyaanController@show')->name('pertanyaan.show');
 
 Route::group(['middleware' => 'auth'], function() {
     Route::resource('tag', 'TagController')->except(['create']);
-    Route::resource('pertanyaan', 'PertanyaanController')->except(['index', 'show']);
+    Route::resource('pertanyaan', 'PertanyaanController')->except(['index']);
     Route::post('pertanyaan/{id}/jawab', 'PertanyaanController@jawab')->name('pertanyaan.jawab');
     Route::post('komentar/{id}/{jenis}', 'PertanyaanController@komentar');
     Route::get('benar/{id}', 'JawabanController@benar')->name('jawaban.benar');
