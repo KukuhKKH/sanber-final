@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateJawabanTable extends Migration
+class AddBenarTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class CreateJawabanTable extends Migration
      */
     public function up()
     {
-        Schema::create('jawaban', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->text('isi');
-            $table->unsignedBigInteger('pertanyaan_id');
-            $table->unsignedBigInteger('user_id');
-            $table->timestamps();
+        Schema::table('jawaban', function (Blueprint $table) {
+            $table->integer('benar')->nullable()->after('user_id');
         });
     }
 
@@ -29,6 +25,8 @@ class CreateJawabanTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jawaban');
+        Schema::table('jawaban', function (Blueprint $table) {
+            $table->dropColumn('benar');
+        });
     }
 }

@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'heroku'),
 
     /*
     |--------------------------------------------------------------------------
@@ -89,6 +89,16 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
+        ],
+        'heroku' => [
+            'driver'   => 'pgsql',
+            'host'     => isset(parse_url(getenv("DATABASE_URL"))["host"]) ? parse_url(getenv("DATABASE_URL"))["host"] : '',
+            'database' => substr(parse_url(getenv("DATABASE_URL"))["path"], 1),
+            'username' => isset(parse_url(getenv("DATABASE_URL"))["user"]) ? parse_url(getenv("DATABASE_URL"))["user"] : '',
+            'password' => isset(parse_url(getenv("DATABASE_URL"))["pass"]) ? parse_url(getenv("DATABASE_URL"))["pass"] : '',
+            'charset'  => 'utf8',
+            'prefix'   => '',
+            'schema'   => 'public',
         ],
 
     ],

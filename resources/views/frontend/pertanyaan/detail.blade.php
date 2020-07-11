@@ -70,6 +70,7 @@
                         <a href="" style="font-size: 12px;" data-toggle="modal" data-target="#exampleModal">add a comment</a>
                     </div>
                 </div>
+
                 <div class="row mt-5 pr-3">
                     <div class="col-md-1 text-center">
                         <a href=""><i class="fas fa-sort-up fa-3x"></i></a>

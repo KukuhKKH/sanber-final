@@ -14,7 +14,7 @@
     <div class="container mt-5 mb-5">
         <div class="row">
             <div class="col-md-8">
-                <h1 class="h4 mt-5">Buat Pertanyaan kamu kedalam forum</h2>
+                <h2 class="h4 mt-5">Buat Pertanyaan kamu kedalam forum</h2>
                 <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tenetur, fugiat!</p>
             </div>
             <div class="col-md-4">

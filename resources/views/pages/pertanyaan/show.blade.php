@@ -1,6 +1,14 @@
 @extends('layouts.master')
 @section('title',"$pertanyaan->judul")
 
+@section('css')
+    <style>
+        a.disabled {
+            pointer-events: none;
+            cursor: default;
+        }
+    </style>
+@endsection
 
 @section('content')
     <div class="container mt-5">
@@ -8,14 +16,14 @@
             <div class="col-md-8 text-justify border-right pr-3">
                 <div class="row">
                     <div class="col-md-1 text-center">
-                        <a href=""><i class="fas fa-sort-up fa-3x"></i></a>
-                        <span>2</span>
-                        <a href=""><i class="fas fa-sort-down fa-3x"></i></a>
+                        <a href="{{ route('vote.up', [$pertanyaan->id, 'pertanyaan']) }}" {!! ($pertanyaan->user_id == Auth::user()->id) ? 'class="disabled text-dark"' : '' !!}><i class="fas fa-sort-up fa-3x"></i></a>
+                        <span>0</span>
+                        <a href="{{ route('vote.down', [$pertanyaan->id, 'pertanyaan']) }}" {!! ($pertanyaan->user_id == Auth::user()->id) ? 'class="disabled text-dark"' : '' !!}><i class="fas fa-sort-down fa-3x"></i></a>
                     </div>
                     <div class="col-md-11 mb-5">
                         <div class="border-bottom pb-3 mb-5">
                             <h1 class="h3">{{ $pertanyaan->judul }}</h1>
-                            <small>Create {{ $pertanyaan->created_at }}</small> . <small>views {{ views($pertanyaan)->count() }}</small>
+                            <small>Create in {{ $pertanyaan->created_at }}</small> . <small>views {{ views($pertanyaan)->count() }}</small>
                             <p class="mt-3 mb-1">{!! $pertanyaan->isi !!}</p>
                             <br>
                             @foreach($pertanyaan->tag as $tag_penanda)
@@ -24,9 +32,11 @@
                         </div>
                         {{-- komentar pertanyaan --}}
                         <div class="ml-5">
-                            <p class="m-0 border-top border-bottom pt-2 pb-2" style="font-size: 12px;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci, est. <a href="">--Restu</a> july 28 at 11:23 </p>
+                            @foreach($pertanyaan->komentar as $item)
+                                <p class="m-0 border-top border-bottom pt-2 pb-2" style="font-size: 12px;">{{ $item->isi }}. <a href="">--{{ $item->user->nama }}--</a> {{ $item->created_at->diffForHumans() }} </p>
+                            @endforeach
                         </div>
-                        <a href="" data-toggle="modal" data-target="#exampleModal" style="font-size: 12px;">add a comment</a>
+                        <a href="javascript:void(0)" onclick="formKomentar({{ $pertanyaan->id }}, 'pertanyaan')" style="font-size: 12px;">add a comment</a>
                     </div>
 
                     {{-- jawaban --}}
@@ -35,43 +45,56 @@
                         @foreach($pertanyaan->jawaban as $value)
                             <div class="row mt-5 pr-3">
                                 <div class="col-md-1 text-center">
-                                    <a href=""><i class="fas fa-sort-up fa-3x"></i></a>
-                                    <span>2</span>
-                                    <a href=""><i class="fas fa-sort-down fa-3x"></i></a>
+                                    <a href="{{ route('vote.down', [$value->id, 'jawaban']) }}" {!! ($value->user_id == Auth::user()->id) ? 'class="disabled text-dark"' : '' !!}><i class="fas fa-sort-up fa-3x"></i></a>
+                                    <span>0</span>
+                                    <a href="{{ route('vote.down', [$value->id, 'jawaban']) }}" {!! ($value->user_id == Auth::user()->id) ? 'class="disabled text-dark"' : '' !!}><i class="fas fa-sort-down fa-3x"></i></a>
                                 </div>
                                 <div class="col-md-11">
-                                    <div class="border-bottom pb-3 mb-5">
-                                        {{--<h1 class="h3">{{ $value-judul }}</h1>--}}
-                                        <small>Create {{ $value->created_at }}</small> . <small>views 22</small>
-                                        <p class="mt-3 mb-1">{{ $value->isi }}</p>
+                                    <div class="border-bottom pb-3 mb-3">
+                                        @if($value->benar)
+                                            <a href="javascript:void(0)"><i class="fa fa-check-circle" aria-hidden="true"></i> Jawaban Benar</a>
+                                        @endif
+                                        <small>Create {{ $value->created_at }}</small>
+                                        @if(Auth::user()->id == $pertanyaan->user_id)
+                                            <a href="{{ route('jawaban.benar', $value->id) }}" class="float-right">Tandai sebagai jawaban Benar</a>
+                                        @endif
+                                        <p class="mt-3 mb-1">{!! $value->isi !!}</p>
+                                    </div>
+                                    <div class="media mb-4" style="position: relative; left:65%;">
+                                        <img class="mr-2 rounded-circle" width="25" src="{{ ($value->user->foto != '') ? $value->user->foto : asset('images/user.png') }}" alt="{{ $value->user->nama }}">
+                                        <div class="media-body">
+                                            <small class="mt-0">{{ $value->user->nama }}</small><br>
+                                            <small title="point reputations">100</small> . <small>{{ $value->created_at->diffForHumans() }}</small>
+                                        </div>
                                     </div>
 
                                     {{-- komentar jawaban --}}
-                                    <div class="ml-5 border-top border-bottom pt-2 pb-2">
-                                        <p class="m-0" style="font-size: 12px;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci, est. <a href="">--Restu</a> july 28 at 11:23 </p>
-                                        <div class="media mt-3" style="position: relative; left:65%;">
-                                            <img class="mr-2 rounded-circle" src="https://via.placeholder.com/30" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <small class="mt-0">Restu</small><br>
-                                                <small title="point reputations">100</small> . <small>Dijawab 3 jam yang lalu</small>
-                                            </div>
+                                    @foreach($value->komentar as $item)
+                                        <div class="ml-5 border-top border-bottom pt-2 pb-2">
+                                            <p class="m-0" style="font-size: 12px;">{{ $item->isi }}. <a href="">-- {{ $item->user->nama }} --</a>{{ $item->created_at->diffForHumans() }}</p>
                                         </div>
-                                    </div>
-                                    <a href="" style="font-size: 12px;" data-toggle="modal" data-target="#exampleModal">add a comment</a>
+                                    @endforeach
+                                    <a href="javascript:void(0)" style="font-size: 12px;" onclick="formKomentar({{ $value->id }}, 'jawaban')">add a comment</a>
                                 </div>
                             </div>
                         @endforeach
                     @else
-                        <h3 class="justify-content-center">Belum ada Jawaban</h3>
+                        <h3>Belum ada Jawaban</h3>
                     @endif
                 </div>
+                <hr>
+                @if(Auth::guest())
+                    <h3>Silahkan login untuk menjawab</h3>
+                @else
                     <h3>Jawaban Kamu</h3>
-                    <form action="" method="POST">
+                    <form action="{{ route('pertanyaan.jawab', $pertanyaan->id) }}" method="POST">
                         @csrf
                         <div class="form-group">
                             <textarea type="text" class="form-control" id="tc_input" name="isi" placeholder="Keluhanmu"> </textarea>
                         </div>
+                        <button class="btn btn-success float-right">Jawab</button>
                     </form>
+                @endif
             </div>
             <div class="col-md-4">
                 <div class="card text-white mb-3">
@@ -80,10 +103,10 @@
                         {{-- pertanyaan yang sama --}}
                         @foreach($like as $value)
                             <div class="media text-dark pb-3 border-bottom mb-3">
-                                <img class="mr-3 rounded-circle" src="https://via.placeholder.com/50" alt="Generic placeholder image">
+                                <img class="mr-3 rounded-circle" width="40" src="{{ ($value->foto != '') ? $value->foto : asset('images/user.png') }}" alt="not found">
                                 <div class="media-body">
                                     <p class="mt-0 mb-0 font-weight-bold">{{ $value->nama }}</p>
-                                    <small>12-July-2020</small><br>
+                                    <small>{{ \Illuminate\Support\Carbon::parse($value->created_at)->diffForHumans() }}</small><br>
                                     <a href="{{ route('pertanyaan.show', $value->id) }}"><small>{{ $value->judul }}</small></a><br>
                                     <?php
                                     $tags = explode(',', $value->tag)
@@ -108,25 +131,33 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalKomentar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form action="">
+            <form id="formKomentar" action="" method="POST">
+                @csrf
+                @method("POST")
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Jawaban kamu</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Komentar kamu</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <input type="text" class="form-control" required autofocus>
-                            <small>Note* :masukan jawaban Lebih spesifik dan bayangkan Anda menerima jawaban dari pertanyaan kamu</small>
-                        </div>
+                        @guest
+                            <h3>Siliahkan login untuk memberi komentar</h3>
+                        @else
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="isi" required autofocus>
+                                <small>Note* :masukan komentar Lebih spesifik</small>
+                            </div>
+                        @endguest
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Submit</button>
+                        @if(!Auth::guest())
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        @endif
                     </div>
                 </div>
             </form>
@@ -136,6 +167,12 @@
 
 @section('script')
     <script>
+        function formKomentar(id, jenis) {
+            document.querySelector(`#formKomentar`).action = `/komentar/${id}/${jenis}`
+            document.querySelector(`#formKomentar`).method = 'post'
+            $("#modalKomentar").modal('show')
+        }
+
         CKEDITOR.replace('isi', {
             extraPlugins: "codesnippet"
         })

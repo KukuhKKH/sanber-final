@@ -16,12 +16,17 @@ Route::get('/', 'PertanyaanController@index')->name('home');
 Auth::routes();
 
 //Route::get('/pertanyaan', 'Frontend\PertanyaanController@index')->name('pertanyaan');
-//Route::get('/pertanyaan/detail', 'Frontend\PertanyaanController@detail')->name('pertanyaan.detail');
+Route::get('/pertanyaan/detail', 'Frontend\PertanyaanController@detail')->name('pertanyaan.detail');
 
 Route::get('pertanyaan', 'PertanyaanController@index')->name('pertanyaan.index');
-Route::get('pertanyaan/index/{id}', 'PertanyaanController@show')->name('pertanyaan.show');
+Route::get('pertanyaan/{id}', 'PertanyaanController@show')->name('pertanyaan.show');
 
 Route::group(['middleware' => 'auth'], function() {
     Route::resource('tag', 'TagController')->except(['create']);
     Route::resource('pertanyaan', 'PertanyaanController')->except(['index', 'show']);
+    Route::post('pertanyaan/{id}/jawab', 'PertanyaanController@jawab')->name('pertanyaan.jawab');
+    Route::post('komentar/{id}/{jenis}', 'PertanyaanController@komentar');
+    Route::get('benar/{id}', 'JawabanController@benar')->name('jawaban.benar');
+    Route::get('voteup/{id}/{jenis}', 'VoteController@vote_up')->name('vote.up');
+    Route::get('votedown/{id}/{jenis}', 'VoteController@vote_down')->name('vote.down');
 });

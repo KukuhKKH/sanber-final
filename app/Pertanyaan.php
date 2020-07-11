@@ -31,4 +31,8 @@ class Pertanyaan extends Model implements Viewable
     public function jawaban() {
         return $this->hasMany('App\Jawaban');
     }
+
+    public function komentar() {
+        return $this->belongsToMany('App\Komentar', 'pertanyaan_has_komentar');
+    }
 }

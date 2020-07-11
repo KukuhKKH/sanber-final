@@ -54,7 +54,7 @@
                                 <span class="btn btn-success btn-sm mr-2">{{ $tag_penanda->nama }}</span>
                             @endforeach
                             <br>
-                            <small>{{ $value->user->nama }}</small> | <small>{{ $value->created_at }}</small> | <small><i class="fas fa-eye"></i> {{ views($value)->count() }}</small> | <small><i class="fas fa-comments"></i> 15</small>
+                            <small>{{ $value->user->nama }}</small> | <small>{{ $value->created_at }}</small> | <small><i class="fas fa-eye"></i> {{ views($value)->count() }}</small> | <small><i class="fas fa-comments"></i> {{ count($value->jawaban) }}</small>
                         </div>
                     </li>
                     @endforeach
@@ -65,8 +65,11 @@
                     <div class="card-header text-dark">Popular Post</div>
                     <div class="card-body text-dark text-justify">
                         <ul>
-                            <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, eligendi.</li>
-                            <li>Lorem ipsum dolor sit amet.</li>
+                            @foreach($populer as $value)
+                                <li>
+                                    <a href="{{ route('pertanyaan.show', $value->id) }}">{{ $value->judul }}</a>
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
