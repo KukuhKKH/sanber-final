@@ -43,6 +43,10 @@ class User extends Authenticatable
         return $this->hasMany('App\Pertanyaan');
     }
 
+    public function jawaban() {
+        return $this->hasMany('App\Jawaban');
+    }
+
     public function vote() {
         return $this->belongsToMany('App\Vote', 'vote_has_user');
     }

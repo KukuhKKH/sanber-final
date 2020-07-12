@@ -13,7 +13,8 @@
                 <a href=" {{ route('login') }} " class="btn btn-outline-success my-2 my-sm-0 mr-sm-2" type="submit">Login</a>
                 <a href="{{ route('register') }}" class="btn btn-outline-success my-2 my-sm-0" type="submit">Register</a>
             @else
-                <h5 class="mr-5">{{ Auth::user()->nama }}</h5>
+                <h5 class="mr-3">{{ Auth::user()->nama }}</h5>
+                <a href="{{ route('profile.index') }}" class="btn btn-sm btn-primary mr-2">Profile</a>
                 <a  href="{{ route('logout') }}" class="btn btn-outline-success my-2 my-sm-0"
                    onclick="event.preventDefault();
                            document.getElementById('logout-form').submit();">
