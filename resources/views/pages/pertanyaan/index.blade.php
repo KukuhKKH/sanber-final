@@ -44,7 +44,7 @@
         <div class="row">
             <div class="col-md-8 border-right pr-3">
                 <ul class="list-unstyled text-justify">
-                    @foreach($pertanyaan as $value)
+                    @forelse($pertanyaan as $value)
                     <li class="media pb-3 mb-5 border-bottom">
                         <img class="mr-3 rounded-circle" src="https://via.placeholder.com/50" alt="Generic placeholder image">
                         <div class="media-body">
@@ -57,7 +57,11 @@
                             <small>{{ $value->user->nama }}</small> | <small>{{ $value->created_at }}</small> | <small><i class="fas fa-eye"></i> {{ views($value)->count() }}</small> | <small><i class="fas fa-comments"></i> {{ count($value->jawaban) }}</small>
                         </div>
                     </li>
-                    @endforeach
+                    @empty
+                    <li class="media pb-3 mb-5 border-bottom">
+                        <h5>Belum ada pertanyaan</h5>
+                    </li>
+                    @endforelse
                 </ul>
             </div>
             <div class="col-md-4">

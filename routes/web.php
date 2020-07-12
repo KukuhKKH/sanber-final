@@ -16,7 +16,7 @@ Route::get('/', 'PertanyaanController@index')->name('home');
 Auth::routes();
 
 //Route::get('/pertanyaan', 'Frontend\PertanyaanController@index')->name('pertanyaan');
-Route::get('/pertanyaan/detail', 'Frontend\PertanyaanController@detail')->name('pertanyaan.detail');
+// Route::get('/pertanyaan/detail', 'Frontend\PertanyaanController@detail')->name('pertanyaan.detail');
 
 Route::get('pertanyaan', 'PertanyaanController@index')->name('pertanyaan.index');
 Route::get('pertanyaan/{id}/show', 'PertanyaanController@show')->name('pertanyaan.show');
